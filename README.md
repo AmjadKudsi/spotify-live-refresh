@@ -54,12 +54,13 @@ The Power BI dashboard includes:
 - Output CSV is committed to this repo: [`spotify_playlist_data.csv`](spotify_playlist_data.csv)
 - Can be connected to Power BI using the **raw GitHub CSV URL**
 
+![Spotify Live Dashboard](thumbnail.png)
 ---
 
 ## 🔗 How to Use in Power BI
 
 1. In Power BI Desktop → **Get Data → Web**
-2. [Paste this URL:](https://raw.githubusercontent.com/your-username/spotify-live-refresh/main/spotify_playlist_data.csv)
+2. Paste this URL: https://raw.githubusercontent.com/your-username/spotify-live-refresh/main/spotify_playlist_data.csv
 3. Transform and model your data
 4. Add slicers, KPIs, charts as needed
 
