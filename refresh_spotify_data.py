@@ -2,9 +2,6 @@ import time
 import requests
 import pandas as pd
 
-# === Spotify API Credentials ===
-CLIENT_ID = 'e1cf4e3dcd784cd898781eaf81053eb5'
-CLIENT_SECRET = '25e012112716498f8fd4ae4424aaefa0'
 
 # === Playlist ID (Top 200 Global) ===
 PLAYLIST_ID = '4yNfFAuHcSgzbcSm6q5QDu'
