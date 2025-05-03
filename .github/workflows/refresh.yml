@@ -1,0 +1,38 @@
+name: Refresh Spotify Data
+
+on:
+  schedule:
+    - cron: '0 7 * * *'  # Runs daily at 7:00 AM UTC (adjust for timezone)
+  workflow_dispatch:  # Allows manual run
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          pip install pandas requests
+
+      - name: Run data refresh script
+        env:
+          CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+        run: |
+          python refresh_spotify_data.py
+
+      - name: Commit updated CSV
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add spotify_playlist_data.csv
+          git commit -m "📊 Auto-refresh data"
+          git push
