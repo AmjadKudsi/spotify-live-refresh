@@ -1,16 +1,16 @@
 import time
+import os
 import requests
 import pandas as pd
-import os
 
-# === Spotify API Credentials ===
+# === Get Spotify Credentials from Environment (for GitHub Actions) ===
 CLIENT_ID = os.environ['CLIENT_ID']
 CLIENT_SECRET = os.environ['CLIENT_SECRET']
 
 # === Playlist ID (Top 200 Global) ===
 PLAYLIST_ID = '4yNfFAuHcSgzbcSm6q5QDu'
 
-# === Step 1: Get Spotify Access Token ===
+# === Step 1: Get Access Token ===
 def get_spotify_token(client_id, client_secret):
     url = 'https://accounts.spotify.com/api/token'
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -22,7 +22,7 @@ def get_spotify_token(client_id, client_secret):
 def get_playlist_tracks(token, playlist_id):
     url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
     headers = {'Authorization': f'Bearer {token}'}
-
+    
     all_items = []
     offset = 0
     limit = 100
@@ -40,7 +40,6 @@ def get_playlist_tracks(token, playlist_id):
 
         if len(items) < limit:
             break
-
         offset += limit
         time.sleep(0.1)
 
@@ -53,25 +52,27 @@ def get_playlist_tracks(token, playlist_id):
         track = item.get('track')
         if track:
             track_id = track.get('id')
-            artist = track['artists'][0]  # only take primary artist
+            artist = track['artists'][0]
             artist_id = artist.get('id')
             artist_name = artist.get('name')
+            image_url = track['album']['images'][0]['url'] if track['album']['images'] else None
+
             if track_id and artist_id:
                 track_data.append({
                     'track_id': track_id,
-                    'track_name': track.get('name'),
-                    'artist_name': artist_name,
+                    'track_name': track.get('name', 'Unknown'),
+                    'artist_name': artist_name or 'Unknown',
                     'artist_id': artist_id,
-                    'album_name': track['album']['name'],
-                    'release_date': track['album']['release_date'],
-                    'popularity': track['popularity'],
-                    'cover_url': track['album']['images'][0]['url'],
-                    'spotify_url': track['external_urls']['spotify']
+                    'album_name': track['album'].get('name', 'Unknown'),
+                    'release_date': track['album'].get('release_date', None),
+                    'popularity': track.get('popularity', None),
+                    'cover_url': image_url,
+                    'spotify_url': track['external_urls'].get('spotify')
                 })
                 artist_info.append((artist_id, artist_name))
 
     df_tracks = pd.DataFrame(track_data)
-    return df_tracks, dict(set(artist_info))  # remove duplicates using set()
+    return df_tracks, dict(set(artist_info))
 
 # === Step 3: Fetch Artist Images ===
 def fetch_artist_images(artist_dict, token):
@@ -86,7 +87,7 @@ def fetch_artist_images(artist_dict, token):
             images = artist_data.get('images', [])
             artist_image_data[artist_id] = images[0]['url'] if images else None
         else:
-            print(f"❌ Failed to fetch image for {artist_name}: {response.status_code}")
+            print(f"❌ Could not fetch image for {artist_name} ({artist_id})")
             artist_image_data[artist_id] = None
         time.sleep(0.1)
 
@@ -98,15 +99,19 @@ if __name__ == "__main__":
     df_tracks, artist_dict = get_playlist_tracks(token, PLAYLIST_ID)
     artist_images = fetch_artist_images(artist_dict, token)
 
-    # Add artist image to track DataFrame
+    # Merge artist image URL
     df_tracks['artist_image_url'] = df_tracks['artist_id'].map(artist_images)
 
-    # Select columns for Power BI
+    # Final columns
     columns_to_keep = [
         'track_id', 'track_name', 'artist_name', 'album_name', 'release_date',
         'popularity', 'cover_url', 'spotify_url', 'artist_image_url'
     ]
 
-    df_tracks[columns_to_keep].to_csv('spotify_playlist_data.csv', index=False)
-    print("✅ Final dataset with artist images saved to spotify_playlist_data.csv")
-    print(df_tracks[columns_to_keep].head())
+    df_final = df_tracks[columns_to_keep].fillna('')  # Handle missing values
+
+    # Export to CSV in project root (GitHub will track this)
+    df_final.to_csv('spotify_playlist_data.csv', index=False)
+
+    print("✅ Final CSV with artist images saved as spotify_playlist_data.csv")
+    print(df_final.head())
