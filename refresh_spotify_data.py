@@ -2,6 +2,7 @@ import time
 import os
 import requests
 import pandas as pd
+from datetime import datetime
 
 # === Get Spotify Credentials from Environment (for GitHub Actions) ===
 CLIENT_ID = os.environ['CLIENT_ID']
@@ -109,6 +110,8 @@ if __name__ == "__main__":
     ]
 
     df_final = df_tracks[columns_to_keep].fillna('')  # Handle missing values
+
+    df_final['data_refresh_timestamp'] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 
     # Export to CSV in project root (GitHub will track this)
     df_final.to_csv('spotify_playlist_data.csv', index=False)
