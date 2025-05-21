@@ -3,7 +3,7 @@
 This project automatically retrieves and updates the **Spotify Global Top 200 Playlist** every day at **7:00 AM UTC**, using the Spotify Web API and a Python script. The dataset is used to power a **live Power BI dashboard** that showcases streaming trends, top tracks, and artist insights.
 
 ---
-![Spotify Live Dashboard](thumbnail.png)
+![Spotify Live Dashboard](dashboard.png)
 
 ## 📌 Key Features
 
