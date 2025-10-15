@@ -70,7 +70,7 @@ The Power BI dashboard includes:
 
 Built by **Amjad Ali**  
 🧑‍💻 *Data Science Student | Python + Power BI Enthusiast*  
-🔗 LinkedIn: [LinkedIn Profile] ](https://www.linkedin.com/in/amjadkudsi/) 
+🔗 LinkedIn: [LinkedIn Profile](https://www.linkedin.com/in/amjadkudsi/) 
 
 ---
 
