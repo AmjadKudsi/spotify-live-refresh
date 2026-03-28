@@ -60,7 +60,7 @@ The Power BI dashboard includes:
 ## 🔗 How to Use in Power BI
 
 1. In Power BI Desktop → **Get Data → Web**
-2. Paste this URL: https://raw.githubusercontent.com/your-username/spotify-live-refresh/main/spotify_playlist_data.csv
+2. Paste this URL: https://raw.githubusercontent.com/AmjadKudsi/spotify-live-refresh/main/spotify_playlist_data.csv
 3. Transform and model your data
 4. Add slicers, KPIs, charts as needed
 
@@ -69,7 +69,7 @@ The Power BI dashboard includes:
 ## 📬 Contact
 
 Built by **Amjad Ali**  
-🧑‍💻 *Data Science Student | Python + Power BI Enthusiast*  
+🧑‍💻 *Data Science Student | Quant Analytics *  
 🔗 LinkedIn: [LinkedIn Profile](https://www.linkedin.com/in/amjadkudsi/) 
 
 ---
